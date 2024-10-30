@@ -84,7 +84,7 @@ jobs:
         mvn deploy --settings .maven/settings.xml -DmuleDeploy -DskipMunitTests  \
         -Dclient.id="${{ secrets.CONNECTED_APP_CLIENT_ID }}" \
         -Dclient.secret="${{ secrets.CONNECTED_APP_CLIENT_SECRET }}" \
-        Business_Group_Id: ${{ secrets.Business_Group_Id }}
+        -Danypoint.businessGroup="$Business_Group_Id" \
         -Denv=dev \
         -Dappname=munitGit \
         -Danypoint.platform.client_id="${{secrets.client_id}}" \
