@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="d2b49967-0a86-49a5-973b-bb636637f950" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="50803a88-920b-422e-9735-2dcc8c38bef2" >
+		<salesforce:basic-connection username="Gopi.tata@apicentrics.com" password="Viratian@123" securityToken="enMcliDKoEg5EKJ3qM47IInI" />
+	</salesforce:sfdc-config>
+	<flow name="munit-gitaction-pipeline-deploymentFlow" doc:id="1a1c974b-700e-4d1e-82b7-a14c9b1254ed" >
+		<http:listener doc:name="Listener" doc:id="7d7146df-71dd-41d7-b2bc-29bb441da386" config-ref="HTTP_Listener_config" path="/munit"/>
+		<salesforce:query doc:name="Query" doc:id="4a812503-e5f6-4279-a357-ebe25c9efa1e" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query ><![CDATA[SELECT age__c,doctor__c,Id,pname__c FROM patient__c]]></salesforce:salesforce-query>
+		</salesforce:query>
+		<logger level="INFO" doc:name="Logger" doc:id="604a9c60-590d-49f1-ac89-c4b301d10740" message="#[payload]"/>
+		<ee:transform doc:name="Transform Message" doc:id="99cc88d9-dba9-4ebc-8bef-06ea166689f1" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
